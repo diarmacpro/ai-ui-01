@@ -1,0 +1,23 @@
+{
+  "sidebar": [
+    {
+      "text": "home",
+      "icon": "bi-house",
+      "url": ""
+    },
+    {
+      "text": "content1",
+      "icon": "bi-file-text",
+      "url": "content1"
+    },
+    {
+      "text": "content2",
+      "icon": "bi-gear",
+      "url": "content2"
+    }
+  ],
+  "content": {
+    "content1": "./pages/content1.html",
+    "content2": "./pages/content2.html"
+  }
+}

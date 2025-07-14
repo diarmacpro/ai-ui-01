@@ -1,0 +1,74 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #34495e;
+  color: white;
+  height: 50px;
+}
+
+.toggle-btn {
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-right: 15px;
+}
+
+/* Main layout */
+#app {
+  display: flex;
+  height: calc(100vh - 50px); /* dikurangi tinggi navbar */
+  transition: all 0.3s ease;
+}
+
+.left {
+  width: 220px;
+  background-color: #2c3e50;
+  color: white;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.left ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.left li {
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.left li:hover {
+  background-color: #34495e;
+}
+
+.right {
+  flex: 1;
+  padding: 20px;
+  background-color: #ecf0f1;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.bi {
+  font-size: 1.1em;
+}
+
+/* Sidebar toggle effect */
+#app.sidebar-hidden .left {
+  display: none;
+}
+
+#app.sidebar-hidden .right {
+  width: 100%;
+}
