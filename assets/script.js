@@ -72,5 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
     app.classList.toggle('sidebar-hidden');
   });
 
-  init();
+  init(); // fungsi inisialisasi sidebar & content
 });
+
