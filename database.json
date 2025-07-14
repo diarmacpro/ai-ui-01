@@ -4,8 +4,9 @@
     { "text": "content1", "icon": "bi-file-text", "parameter": "p", "url": "content1" },
     { "text": "content2", "icon": "bi-gear", "parameter": "p", "url": "content2" },
     { "text": "content3", "icon": "bi-gear", "parameter": "p", "url": "content3" },
-    { "text": "blog A", "icon": "bi-journal-text", "parameter": "b", "url": "blog1" },
-    { "text": "blog B", "icon": "bi-journal-text", "parameter": "b", "url": "blog2" }
+    { "text": "blog", "icon": "bi-gear", "parameter": "", "url": "", "id": "blogParent", "static": true },
+    { "text": "blog A", "icon": "bi-journal-text", "parameter": "b", "url": "blog1", "parent": "blogParent" },
+    { "text": "blog B", "icon": "bi-journal-text", "parameter": "b", "url": "blog2", "parent": "blogParent" }
   ],
   "content": {
     "p": "pages",

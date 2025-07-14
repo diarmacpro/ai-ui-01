@@ -1,3 +1,8 @@
+.menu-parent-container {
+  display: block;
+  width: 100%;
+  position: relative;
+}
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -81,4 +86,25 @@ body {
 
 #app.sidebar-hidden .right {
   flex: 1 1 100%;
+}
+
+
+.submenu {
+  list-style: none;
+  padding-left: 15px;
+  margin: 5px 0;
+}
+
+.submenu li {
+  padding: 8px;
+  font-size: 0.95em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.submenu li:hover {
+  background-color: #3d566e;
 }
