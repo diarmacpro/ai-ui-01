@@ -1,25 +1,33 @@
 let db = null;
 
-async function loadContent(pageKey) {
+async function loadContentByParams(params) {
   const contentBox = document.getElementById('content');
 
-  if (!pageKey) {
+  if (!params || [...params].length === 0) {
     history.pushState({}, '', './');
     contentBox.innerHTML = 'Ini adalah halaman beranda.';
     return;
   }
 
-  if (db.content[pageKey]) {
-    try {
-      const res = await fetch(db.content[pageKey]);
-      const html = await res.text();
-      contentBox.innerHTML = html;
-      history.pushState({}, '', '?p=' + pageKey);
-    } catch (e) {
-      contentBox.textContent = 'Gagal memuat konten.';
-    }
-  } else {
+  // Ambil parameter pertama, misalnya: ?p=content1 atau ?b=blog1
+  const [paramKey, paramValue] = params.entries().next().value;
+
+  const dir = db.content[paramKey];
+  if (!dir || !paramValue) {
     contentBox.textContent = 'Konten tidak ditemukan.';
+    return;
+  }
+
+  const filePath = `./${dir}/${paramValue}.html`;
+
+  try {
+    const res = await fetch(filePath);
+    if (!res.ok) throw new Error();
+    const html = await res.text();
+    contentBox.innerHTML = html;
+    history.pushState({}, '', `?${paramKey}=${paramValue}`);
+  } catch (e) {
+    contentBox.textContent = 'Gagal memuat konten.';
   }
 }
 
@@ -32,19 +40,27 @@ async function init() {
     const li = document.createElement('li');
     li.innerHTML = `<i class="bi ${item.icon}"></i> <span>${item.text}</span>`;
     li.addEventListener('click', () => {
-      loadContent(item.url);
+      if (!item.parameter) {
+        // Beranda
+        loadContentByParams(new URLSearchParams());
+      } else {
+        const params = new URLSearchParams();
+        params.set(item.parameter, item.url);
+        loadContentByParams(params);
+      }
     });
     sidebar.appendChild(li);
   });
 
-  const params = new URLSearchParams(window.location.search);
-  const initialPage = params.get('p');
-  loadContent(initialPage || "");
+  // Load konten dari URL saat pertama kali
+  const currentParams = new URLSearchParams(window.location.search);
+  loadContentByParams(currentParams);
 }
 
+// Tangani tombol kembali/maju browser
 window.addEventListener('popstate', () => {
-  const params = new URLSearchParams(window.location.search);
-  loadContent(params.get('p') || "");
+  const currentParams = new URLSearchParams(window.location.search);
+  loadContentByParams(currentParams);
 });
 
 // Sidebar toggle

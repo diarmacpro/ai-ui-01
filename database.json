@@ -1,23 +1,14 @@
 {
   "sidebar": [
-    {
-      "text": "home",
-      "icon": "bi-house",
-      "url": ""
-    },
-    {
-      "text": "content1",
-      "icon": "bi-file-text",
-      "url": "content1"
-    },
-    {
-      "text": "content2",
-      "icon": "bi-gear",
-      "url": "content2"
-    }
+    { "text": "home", "icon": "bi-house", "parameter": "", "url": "" },
+    { "text": "content1", "icon": "bi-file-text", "parameter": "p", "url": "content1" },
+    { "text": "content2", "icon": "bi-gear", "parameter": "p", "url": "content2" },
+    { "text": "content3", "icon": "bi-gear", "parameter": "p", "url": "content3" },
+    { "text": "blog A", "icon": "bi-journal-text", "parameter": "b", "url": "blog1" },
+    { "text": "blog B", "icon": "bi-journal-text", "parameter": "b", "url": "blog2" }
   ],
   "content": {
-    "content1": "./pages/content1.html",
-    "content2": "./pages/content2.html"
+    "p": "pages",
+    "b": "blogs"
   }
 }
