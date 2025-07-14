@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard dengan Sidebar Statis</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        /* Menambahkan sedikit style tambahan untuk pengalaman yang lebih baik */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Opsi untuk font, bisa diimpor dari Google Fonts jika diinginkan */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="flex h-screen">
+        <!-- Sidebar Statis -->
+        <aside class="w-64 flex flex-col bg-gray-800 text-white">
+            <!-- Header Sidebar -->
+            <div class="flex items-center justify-center h-16 bg-gray-900 shadow-md">
+                <i class="bi bi-box-seam-fill text-2xl text-indigo-400"></i>
+                <h1 class="ml-3 text-lg font-semibold">Project-UI</h1>
+            </div>
+
+            <!-- Navigasi Sidebar (bisa di-scroll jika item banyak) -->
+            <nav class="flex-grow p-4 space-y-2 overflow-y-auto">
+                <a href="#" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors duration-200">
+                    <i class="bi bi-house-door-fill w-6"></i>
+                    <span class="ml-3">Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors duration-200">
+                    <i class="bi bi-bar-chart-fill w-6"></i>
+                    <span class="ml-3">Analitik</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors duration-200">
+                    <i class="bi bi-people-fill w-6"></i>
+                    <span class="ml-3">Pengguna</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-md transition-colors duration-200">
+                    <i class="bi bi-gear-fill w-6"></i>
+                    <span class="ml-3">Pengaturan</span>
+                </a>
+                 <a href="#" class="flex items-center px-4 py-2 bg-gray-700 text-white rounded-md">
+                    <i class="bi bi-file-earmark-text-fill w-6"></i>
+                    <span class="ml-3">Laporan</span>
+                </a>
+            </nav>
+
+            <!-- Footer Sidebar -->
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex items-center">
+                    <img class="h-10 w-10 rounded-full object-cover" src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User avatar">
+                    <div class="ml-3">
+                        <p class="text-sm font-medium">Andi Wijaya</p>
+                        <a href="#" class="text-xs text-gray-400 hover:text-white">Lihat Profil</a>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Konten Utama -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Navigasi Atas (Header Konten) -->
+            <header class="flex justify-between items-center h-16 px-6 bg-white border-b border-gray-200 shadow-sm">
+                <div class="flex items-center">
+                    <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-full">
+                        <i class="bi bi-bell-fill"></i>
+                    </button>
+                    <button class="p-2 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-full">
+                        <i class="bi bi-chat-left-text-fill"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Area Konten (bisa di-scroll) -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Card 1 -->
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-indigo-100 rounded-full">
+                                <i class="bi bi-cash-coin text-2xl text-indigo-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-500">Pendapatan Hari Ini</p>
+                                <p class="text-2xl font-bold text-gray-800">Rp 1.250.000</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-green-100 rounded-full">
+                                <i class="bi bi-people-fill text-2xl text-green-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-500">Pengguna Baru</p>
+                                <p class="text-2xl font-bold text-gray-800">32</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-yellow-100 rounded-full">
+                                <i class="bi bi-cart-check-fill text-2xl text-yellow-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-500">Pesanan</p>
+                                <p class="text-2xl font-bold text-gray-800">128</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-red-100 rounded-full">
+                                <i class="bi bi-exclamation-triangle-fill text-2xl text-red-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-500">Tiket Terbuka</p>
+                                <p class="text-2xl font-bold text-gray-800">5</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Konten Tambahan -->
+                <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Aktivitas Terbaru</h3>
+                    <p class="text-gray-600">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam.
+                    </p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+</body>
+</html>
