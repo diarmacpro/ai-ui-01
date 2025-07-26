@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Bootstrap Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <style>
+    /* Custom animations */
+    .dropdown-enter {
+      animation: dropdownEnter 0.2s ease-out;
+    }
+    
+    @keyframes dropdownEnter {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .dropup-enter {
+      animation: dropupEnter 0.2s ease-out;
+    }
+    
+    @keyframes dropupEnter {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Smooth transitions */
+    #sidebar {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #mainContent {
+      transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Custom scrollbar */
+    #sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    #sidebar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    
+    #sidebar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 2px;
+    }
+    
+    #sidebar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Hover effects */
+    .hover-scale {
+      transition: transform 0.2s ease;
+    }
+    
+    .hover-scale:hover {
+      transform: scale(1.02);
+    }
+
+    /* Active menu indicator */
+    .menu-active {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Notification badge pulse */
+    .badge-pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.7;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-slate-700 font-sans">
+
+  <!-- Navbar -->
+  <nav class="fixed top-0 left-0 w-full h-16 bg-white flex justify-between items-center px-6 z-50 shadow-sm border-b border-gray-200">
+    <div class="flex items-center gap-4">
+      <button class="text-xl cursor-pointer bg-none border-none p-2 rounded-lg transition-all text-slate-600 hover:bg-gray-100 hover:scale-105 active:scale-95" onclick="toggleSidebar()" title="Toggle Sidebar">
+        <i class="bi bi-list"></i>
+      </button>
+      <a href="#" class="text-2xl font-bold text-slate-800 no-underline tracking-tight flex items-center gap-2" id="brandName">
+        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+          <i class="bi bi-speedometer2 text-white text-sm"></i>
+        </div>
+        AdminPanel
+      </a>
+      <div class="hidden md:flex gap-2" id="mainMenu">
+        <!-- Menu akan diisi dari JavaScript -->
+      </div>
+    </div>
+    <div class="flex items-center gap-3" id="navbarRight">
+      <!-- Navbar right items akan diisi dari JavaScript -->
+    </div>
+  </nav>
+
+  <!-- Overlay untuk mobile -->
+  <div class="hidden fixed top-16 left-0 w-full h-[calc(100vh-4rem)] bg-black bg-opacity-50 z-40" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- Sidebar & Konten -->
+  <div class="flex mt-16 h-[calc(100vh-4rem)]">
+    <!-- Sidebar -->
+    <aside class="w-72 bg-white border-r border-gray-200 relative overflow-y-auto flex flex-col md:translate-x-0 -translate-x-full fixed md:relative top-0 left-0 h-full z-30 shadow-lg md:shadow-none" id="sidebar">
+      <div class="p-6 border-b border-gray-100">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+            <i class="bi bi-person text-white"></i>
+          </div>
+          <div>
+            <h3 class="font-semibold text-slate-800" id="sidebarUserName">John Doe</h3>
+            <p class="text-sm text-slate-500" id="sidebarUserRole">Administrator</p>
+          </div>
+        </div>
+      </div>
+      
+      <nav class="flex-1 py-6" id="sidebarMenu">
+        <!-- Menu akan diisi dari JavaScript -->
+      </nav>
+      
+      <!-- Footer Sidebar -->
+      <footer class="border-t border-gray-100 bg-gray-50 p-4">
+        <div class="relative">
+          <div class="flex items-center gap-3 cursor-pointer p-3 rounded-lg transition-colors hover:bg-gray-100" onclick="toggleUserDropdown()" id="userInfo">
+            <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-semibold text-sm" id="userAvatar">
+              JD
+            </div>
+            <div class="flex-1">
+              <div class="font-medium text-slate-800 text-sm" id="userName">John Doe</div>
+              <div class="text-xs text-slate-500" id="userRole">Administrator</div>
+            </div>
+            <button class="text-slate-400 transition-transform duration-200" id="dropdownToggle">
+              <i class="bi bi-chevron-up text-sm"></i>
+            </button>
+          </div>
+          
+          <!-- Profile Dropdown (Drop-up) -->
+          <ul class="hidden absolute bottom-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mb-2 py-2 z-50 dropup-enter" id="profileDropdown">
+            <!-- Profile menu akan diisi dari JavaScript -->
+          </ul>
+        </div>
+      </footer>
+    </aside>
+
+    <!-- Konten Utama -->
+    <main class="flex-1 overflow-y-auto bg-gray-50" id="mainContent">
+      <div class="p-8">
+        <div class="max-w-7xl mx-auto">
+          <!-- Header -->
+          <div class="mb-8">
+            <h1 class="text-3xl font-bold text-slate-800 mb-2" id="pageTitle">Dashboard</h1>
+            <p class="text-slate-600 leading-relaxed" id="pageDescription">Selamat datang di panel administrasi. Kelola semua aspek sistem Anda dari sini.</p>
+          </div>
+          
+          <!-- Stats Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover-scale">
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <i class="bi bi-people text-blue-600 text-xl"></i>
+                </div>
+                <span class="text-sm text-green-600 bg-green-100 px-2 py-1 rounded-full">+12%</span>
+              </div>
+              <h3 class="text-2xl font-bold text-slate-800 mb-1">1,234</h3>
+              <p class="text-slate-600 text-sm">Total Pengguna</p>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover-scale">
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                  <i class="bi bi-currency-dollar text-green-600 text-xl"></i>
+                </div>
+                <span class="text-sm text-green-600 bg-green-100 px-2 py-1 rounded-full">+8%</span>
+              </div>
+              <h3 class="text-2xl font-bold text-slate-800 mb-1">Rp 2.45M</h3>
+              <p class="text-slate-600 text-sm">Penjualan Hari Ini</p>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover-scale">
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                  <i class="bi bi-cart text-orange-600 text-xl"></i>
+                </div>
+                <span class="text-sm text-green-600 bg-green-100 px-2 py-1 rounded-full">+15%</span>
+              </div>
+              <h3 class="text-2xl font-bold text-slate-800 mb-1">23</h3>
+              <p class="text-slate-600 text-sm">Pesanan Baru</p>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover-scale">
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <i class="bi bi-graph-up text-purple-600 text-xl"></i>
+                </div>
+                <span class="text-sm text-green-600 bg-green-100 px-2 py-1 rounded-full">+5%</span>
+              </div>
+              <h3 class="text-2xl font-bold text-slate-800 mb-1">89.2%</h3>
+              <p class="text-slate-600 text-sm">Tingkat Konversi</p>
+            </div>
+          </div>
+
+          <!-- Content Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Recent Activity -->
+            <div class="lg:col-span-2 bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+              <h3 class="text-lg font-semibold text-slate-800 mb-6 flex items-center gap-2">
+                <i class="bi bi-clock-history text-blue-600"></i>
+                Aktivitas Terbaru
+              </h3>
+              <div class="space-y-4">
+                <div class="flex items-center gap-4 p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                  <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                    <i class="bi bi-person-plus text-white text-sm"></i>
+                  </div>
+                  <div class="flex-1">
+                    <p class="font-medium text-slate-800">Pengguna baru mendaftar</p>
+                    <p class="text-sm text-slate-500">Ahmad Rizki bergabung dengan sistem</p>
+                    <p class="text-xs text-slate-400 mt-1">2 menit yang lalu</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-4 p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                  <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                    <i class="bi bi-cart-check text-white text-sm"></i>
+                  </div>
+                  <div class="flex-1">
+                    <p class="font-medium text-slate-800">Pesanan baru masuk</p>
+                    <p class="text-sm text-slate-500">Pesanan #ORD-2024-001 senilai Rp 250,000</p>
+                    <p class="text-xs text-slate-400 mt-1">5 menit yang lalu</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-4 p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                  <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
+                    <i class="bi bi-credit-card text-white text-sm"></i>
+                  </div>
+                  <div class="flex-1">
+                    <p class="font-medium text-slate-800">Pembayaran berhasil</p>
+                    <p class="text-sm text-slate-500">Transfer bank untuk pesanan #ORD-2024-002</p>
+                    <p class="text-xs text-slate-400 mt-1">10 menit yang lalu</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+              <h3 class="text-lg font-semibold text-slate-800 mb-6 flex items-center gap-2">
+                <i class="bi bi-lightning text-yellow-600"></i>
+                Quick Actions
+              </h3>
+              <div class="space-y-3">
+                <button class="w-full p-4 rounded-lg border border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all text-left group">
+                  <div class="flex items-center gap-3">
+                    <i class="bi bi-plus-circle text-2xl text-blue-500 group-hover:scale-110 transition-transform"></i>
+                    <div>
+                      <p class="font-medium text-slate-800">Tambah Produk</p>
+                      <p class="text-xs text-slate-600">Kelola inventori</p>
+                    </div>
+                  </div>
+                </button>
+                
+                <button class="w-full p-4 rounded-lg border border-gray-200 hover:border-green-500 hover:bg-green-50 transition-all text-left group">
+                  <div class="flex items-center gap-3">
+                    <i class="bi bi-graph-up text-2xl text-green-500 group-hover:scale-110 transition-transform"></i>
+                    <div>
+                      <p class="font-medium text-slate-800">Lihat Laporan</p>
+                      <p class="text-xs text-slate-600">Analisis penjualan</p>
+                    </div>
+                  </div>
+                </button>
+                
+                <button class="w-full p-4 rounded-lg border border-gray-200 hover:border-purple-500 hover:bg-purple-50 transition-all text-left group">
+                  <div class="flex items-center gap-3">
+                    <i class="bi bi-people text-2xl text-purple-500 group-hover:scale-110 transition-transform"></i>
+                    <div>
+                      <p class="font-medium text-slate-800">Kelola User</p>
+                      <p class="text-xs text-slate-600">Manajemen akun</p>
+                    </div>
+                  </div>
+                </button>
+                
+                <button class="w-full p-4 rounded-lg border border-gray-200 hover:border-orange-500 hover:bg-orange-50 transition-all text-left group">
+                  <div class="flex items-center gap-3">
+                    <i class="bi bi-gear text-2xl text-orange-500 group-hover:scale-110 transition-transform"></i>
+                    <div>
+                      <p class="font-medium text-slate-800">Pengaturan</p>
+                      <p class="text-xs text-slate-600">Konfigurasi sistem</p>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="admin-script.js"></script>
+</body>
+</html>

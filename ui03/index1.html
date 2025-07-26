@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Layout Admin</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Bootstrap Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <style>
+    /* Custom animations */
+    .dropdown-enter {
+      animation: dropdownEnter 0.2s ease-out;
+    }
+    
+    .dropdown-exit {
+      animation: dropdownExit 0.2s ease-in;
+    }
+    
+    @keyframes dropdownEnter {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes dropdownExit {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+    }
+    
+    .dropup-enter {
+      animation: dropupEnter 0.2s ease-out;
+    }
+    
+    @keyframes dropupEnter {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-slate-700">
+
+  <!-- Navbar -->
+  <nav class="fixed top-0 left-0 w-full h-16 bg-white flex justify-between items-center px-6 z-50 shadow-sm border-b border-gray-200">
+    <div class="flex items-center gap-5">
+      <button class="text-xl cursor-pointer bg-none border-none p-2 rounded-md transition-colors text-slate-600 hover:bg-gray-100" onclick="toggleSidebar()">
+        <i class="bi bi-list"></i>
+      </button>
+      <a href="./" class="text-2xl font-bold text-slate-800 no-underline tracking-tight" id="brandName">AdminPanel</a>
+      <div class="hidden md:flex gap-6" id="mainMenu">
+        <!-- Menu akan diisi dari JSON -->
+      </div>
+    </div>
+    <div class="flex items-center gap-5" id="navbarRight">
+      <!-- Navbar right items akan diisi dari JSON -->
+    </div>
+  </nav>
+
+  <!-- Overlay untuk mobile -->
+  <div class="hidden fixed top-16 left-0 w-full h-[calc(100vh-4rem)] bg-black bg-opacity-50 z-40" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- Sidebar & Konten -->
+  <div class="flex mt-16 h-[calc(100vh-4rem)]">
+    <!-- Sidebar -->
+    <aside class="w-70 bg-white border-r border-gray-200 relative overflow-y-auto transition-transform duration-300 flex flex-col md:translate-x-0 -translate-x-full fixed md:relative top-0 left-0 h-full z-30" id="sidebar">
+      <ul class="py-6 flex-1" id="sidebarMenu">
+        <!-- Menu akan diisi dari JSON -->
+      </ul>
+      
+      <!-- Footer Sidebar -->
+      <footer class="border-t border-gray-200 bg-gray-50 p-6">
+        <div class="relative">
+          <div class="flex items-center gap-3 cursor-pointer p-2 rounded-lg transition-colors hover:bg-gray-100" onclick="toggleUserDropdown()" id="userInfo">
+            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm" id="userAvatar">
+              JD
+            </div>
+            <div class="flex-1">
+              <div class="font-medium text-slate-800" id="userName">John Doe</div>
+              <div class="text-xs text-slate-600" id="userRole">Administrator</div>
+            </div>
+            <button class="text-slate-400 transition-transform duration-200" id="dropdownToggle">
+              <i class="bi bi-chevron-up"></i>
+            </button>
+          </div>
+          
+          <!-- Profile Dropdown (Drop-up) -->
+          <ul class="hidden absolute bottom-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mb-2 py-2 z-50 dropup-enter" id="profileDropdown">
+            <!-- Profile menu akan diisi dari JSON -->
+          </ul>
+        </div>
+      </footer>
+    </aside>
+
+    <!-- Konten Utama -->
+    <main class="flex-1 p-8 overflow-y-auto bg-gray-50">
+      <h1 class="text-3xl font-bold text-slate-800 mb-2" id="pageTitle">Dashboard</h1>
+      <p class="text-slate-600 leading-relaxed" id="pageDescription">Selamat datang di panel administrasi. Sidebar akan menyembunyikan/menampilkan dengan tombol toggle, dan responsif untuk perangkat mobile.</p>
+      
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mt-6">
+        <h2 class="text-xl font-semibold text-slate-800 mb-4">Statistik Singkat</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+            <h3 class="text-blue-700 font-medium mb-2">Total Pengguna</h3>
+            <p class="text-2xl font-semibold text-slate-800">1,234</p>
+          </div>
+          <div class="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+            <h3 class="text-green-700 font-medium mb-2">Penjualan Hari Ini</h3>
+            <p class="text-2xl font-semibold text-slate-800">Rp 2,450,000</p>
+          </div>
+          <div class="p-4 bg-orange-50 rounded-lg border-l-4 border-orange-500">
+            <h3 class="text-orange-700 font-medium mb-2">Pesanan Baru</h3>
+            <p class="text-2xl font-semibold text-slate-800">23</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Data JSON untuk navbar dan sidebar
+    const appData = {
+      brand: "AdminPanel",
+      navbarMenu: [
+        { name: "Dashboard", href: "#", active: true },
+        { name: "Analitik", href: "#", active: false },
+        { name: "Laporan", href: "#", active: false }
+      ],
+      navbarRight: [
+        {
+          type: "dropdown",
+          icon: "bi-bell",
+          items: [
+            "Notifikasi baru (5)",
+            "Pesanan masuk",
+            "Update sistem",
+            "Lihat semua"
+          ]
+        },
+        {
+          type: "dropdown", 
+          icon: "bi-envelope",
+          items: [
+            "Pesan baru (3)",
+            "Chat dengan admin",
+            "Kotak masuk",
+            "Lihat semua"
+          ]
+        },
+        {
+          type: "dropdown",
+          icon: "bi-person",
+          items: [
+            "Profil Saya",
+            "Pengaturan", 
+            "Bantuan",
+            "Keluar"
+          ]
+        }
+      ],
+      sidebarMenu: [
+        { 
+          name: "Dashboard", 
+          icon: "bi-speedometer2", 
+          href: "#", 
+          active: true 
+        },
+        { 
+          name: "Pengguna", 
+          icon: "bi-people", 
+          href: "#", 
+          active: false 
+        },
+        {
+          name: "Produk",
+          icon: "bi-box",
+          href: "#",
+          active: false,
+          submenu: [
+            { name: "Daftar Produk", href: "#" },
+            { name: "Tambah Produk", href: "#" },
+            { name: "Kategori", href: "#" }
+          ]
+        },
+        { 
+          name: "Pesanan", 
+          icon: "bi-cart", 
+          href: "#", 
+          active: false 
+        },
+        {
+          name: "Laporan",
+          icon: "bi-graph-up",
+          href: "#",
+          active: false,
+          submenu: [
+            { name: "Penjualan", href: "#" },
+            { name: "Keuangan", href: "#" }
+          ]
+        },
+        { 
+          name: "Pengaturan", 
+          icon: "bi-gear", 
+          href: "#", 
+          active: false 
+        },
+        { 
+          name: "Bantuan", 
+          icon: "bi-question-circle", 
+          href: "#", 
+          active: false 
+        }
+      ],
+      user: {
+        name: "John Doe",
+        role: "Administrator",
+        avatar: "JD"
+      },
+      profileMenu: [
+        { name: "Profil Saya", icon: "bi-person", href: "#" },
+        { name: "Pengaturan", icon: "bi-gear", href: "#" },
+        { name: "Bantuan", icon: "bi-question-circle", href: "#" },
+        { name: "Keluar", icon: "bi-box-arrow-right", href: "#" }
+      ]
+    };
+
+    // Render navbar menu
+    function renderNavbarMenu() {
+      const mainMenu = document.getElementById('mainMenu');
+      mainMenu.innerHTML = appData.navbarMenu.map(item => 
+        `<a href="${item.href}" class="no-underline text-slate-600 font-medium px-3 py-2 rounded-md transition-all hover:bg-gray-100 hover:text-slate-800 ${item.active ? 'text-slate-800 bg-gray-100' : ''}" onclick="setActiveNavMenu(this)">${item.name}</a>`
+      ).join('');
+    }
+
+    // Render navbar right
+    function renderNavbarRight() {
+      const navbarRight = document.getElementById('navbarRight');
+      navbarRight.innerHTML = appData.navbarRight.map((item, index) => 
+        `<div class="relative">
+          <div class="cursor-pointer" onclick="toggleNavDropdown(${index})">
+            <span class="text-xl p-2 rounded-lg transition-colors block hover:bg-gray-100">
+              <i class="${item.icon}"></i>
+            </span>
+          </div>
+          <ul class="hidden absolute top-full right-0 bg-white border border-gray-200 rounded-lg shadow-lg min-w-[200px] py-2 mt-2 z-50 dropdown-enter" id="navDropdown${index}">
+            ${item.items.map(subItem => 
+              `<li class="px-4 py-2 cursor-pointer transition-colors hover:bg-gray-50">${subItem}</li>`
+            ).join('')}
+          </ul>
+        </div>`
+      ).join('');
+    }
+
+    // Render sidebar menu
+    function renderSidebarMenu() {
+      const sidebarMenu = document.getElementById('sidebarMenu');
+      sidebarMenu.innerHTML = appData.sidebarMenu.map((item, index) => {
+        if (item.submenu) {
+          return `
+            <li class="mb-1">
+              <div class="relative">
+                <a href="${item.href}" class="flex items-center px-6 py-3 no-underline text-slate-600 font-medium transition-all hover:bg-gray-50 hover:text-slate-800 border-r-3 border-transparent ${item.active ? 'bg-gray-50 text-slate-800 border-blue-500' : ''}" onclick="toggleSubmenu(${index})">
+                  <i class="${item.icon} mr-3"></i>
+                  ${item.name}
+                  <i class="bi bi-chevron-down ml-auto text-xs text-slate-400 transition-transform" id="submenuIcon${index}"></i>
+                </a>
+                <ul class="hidden bg-gray-50 border-l-2 border-gray-200 ml-6" id="submenu${index}">
+                  ${item.submenu.map(subItem => 
+                    `<li><a href="${subItem.href}" class="block px-6 py-2 no-underline text-slate-500 text-sm transition-all hover:bg-gray-100 hover:text-slate-800" onclick="setActiveMenu(this)">${subItem.name}</a></li>`
+                  ).join('')}
+                </ul>
+              </div>
+            </li>
+          `;
+        } else {
+          return `
+            <li class="mb-1">
+              <a href="${item.href}" class="flex items-center px-6 py-3 no-underline text-slate-600 font-medium transition-all hover:bg-gray-50 hover:text-slate-800 border-r-3 border-transparent ${item.active ? 'bg-gray-50 text-slate-800 border-blue-500' : ''}" onclick="setActiveMenu(this)">
+                <i class="${item.icon} mr-3"></i>
+                ${item.name}
+              </a>
+            </li>
+          `;
+        }
+      }).join('');
+    }
+
+    // Render user info
+    function renderUserInfo() {
+      document.getElementById('userName').textContent = appData.user.name;
+      document.getElementById('userRole').textContent = appData.user.role;
+      document.getElementById('userAvatar').textContent = appData.user.avatar;
+    }
+
+    // Render profile menu
+    function renderProfileMenu() {
+      const profileDropdown = document.getElementById('profileDropdown');
+      profileDropdown.innerHTML = appData.profileMenu.map(item => 
+        `<li class="px-4 py-2 cursor-pointer transition-colors hover:bg-gray-50">
+          <a href="${item.href}" class="flex items-center no-underline text-slate-600">
+            <i class="${item.icon} mr-3"></i>
+            ${item.name}
+          </a>
+        </li>`
+      ).join('');
+    }
+
+    // Toggle Sidebar untuk desktop dan mobile
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      
+      if (window.innerWidth <= 768) {
+        sidebar.classList.toggle('translate-x-0');
+        sidebar.classList.toggle('-translate-x-full');
+        overlay.classList.toggle('hidden');
+        overlay.classList.toggle('block');
+      } else {
+        sidebar.classList.toggle('-translate-x-full');
+      }
+    }
+
+    // Tutup sidebar untuk mobile
+    function closeSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      
+      sidebar.classList.add('-translate-x-full');
+      sidebar.classList.remove('translate-x-0');
+      overlay.classList.add('hidden');
+      overlay.classList.remove('block');
+    }
+
+    // Toggle submenu
+    function toggleSubmenu(index) {
+      const submenu = document.getElementById(`submenu${index}`);
+      const icon = document.getElementById(`submenuIcon${index}`);
+      
+      submenu.classList.toggle('hidden');
+      submenu.classList.toggle('block');
+      icon.classList.toggle('rotate-180');
+    }
+
+    // Set active menu
+    function setActiveMenu(element) {
+      // Hapus active dari semua menu
+      document.querySelectorAll('#sidebarMenu a').forEach(a => {
+        a.classList.remove('bg-gray-50', 'text-slate-800', 'border-blue-500');
+        a.classList.add('border-transparent');
+      });
+      
+      // Tambah active ke menu yang diklik
+      element.classList.add('bg-gray-50', 'text-slate-800', 'border-blue-500');
+      element.classList.remove('border-transparent');
+      
+      // Update konten utama
+      const menuText = element.textContent.trim();
+      document.getElementById('pageTitle').textContent = menuText;
+      document.getElementById('pageDescription').textContent = `Anda sedang berada di halaman ${menuText}.`;
+      
+      // Tutup sidebar di mobile setelah memilih menu
+      if (window.innerWidth <= 768) {
+        closeSidebar();
+      }
+    }
+
+    // Set active nav menu
+    function setActiveNavMenu(element) {
+      // Hapus active dari semua nav menu
+      document.querySelectorAll('#mainMenu a').forEach(a => {
+        a.classList.remove('text-slate-800', 'bg-gray-100');
+        a.classList.add('text-slate-600');
+      });
+      
+      // Tambah active ke menu yang diklik
+      element.classList.add('text-slate-800', 'bg-gray-100');
+      element.classList.remove('text-slate-600');
+      
+      // Update konten utama
+      const menuText = element.textContent.trim();
+      document.getElementById('pageTitle').textContent = menuText;
+      document.getElementById('pageDescription').textContent = `Anda sedang berada di halaman ${menuText}.`;
+    }
+
+    // Toggle navbar dropdown
+    function toggleNavDropdown(index) {
+      const dropdown = document.getElementById(`navDropdown${index}`);
+      const allDropdowns = document.querySelectorAll('[id^="navDropdown"]');
+      
+      // Tutup semua dropdown lain
+      allDropdowns.forEach((d, i) => {
+        if (i !== index) {
+          d.classList.add('hidden');
+          d.classList.remove('block');
+        }
+      });
+      
+      dropdown.classList.toggle('hidden');
+      dropdown.classList.toggle('block');
+    }
+
+    // Toggle user dropdown (drop-up)
+    function toggleUserDropdown() {
+      const userInfo = document.getElementById('userInfo');
+      const dropdown = document.getElementById('profileDropdown');
+      const toggle = document.getElementById('dropdownToggle');
+      
+      dropdown.classList.toggle('hidden');
+      dropdown.classList.toggle('block');
+      
+      if (dropdown.classList.contains('block')) {
+        toggle.innerHTML = '<i class="bi bi-chevron-down"></i>';
+      } else {
+        toggle.innerHTML = '<i class="bi bi-chevron-up"></i>';
+      }
+    }
+
+    // Tutup dropdown saat klik di luar
+    document.addEventListener('click', function(event) {
+      const dropdowns = document.querySelectorAll('[id^="navDropdown"], #profileDropdown');
+      const isClickInside = event.target.closest('[onclick*="toggleNavDropdown"], [onclick*="toggleUserDropdown"]');
+      
+      if (!isClickInside) {
+        dropdowns.forEach(dropdown => {
+          dropdown.classList.add('hidden');
+          dropdown.classList.remove('block');
+        });
+        
+        // Reset user dropdown toggle
+        const toggle = document.getElementById('dropdownToggle');
+        if (toggle) {
+          toggle.innerHTML = '<i class="bi bi-chevron-up"></i>';
+        }
+      }
+    });
+
+    // Handle resize window
+    window.addEventListener('resize', function() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      
+      if (window.innerWidth > 768) {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+        overlay.classList.add('hidden');
+        overlay.classList.remove('block');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        sidebar.classList.remove('translate-x-0');
+      }
+    });
+
+    // Initialize app
+    document.addEventListener('DOMContentLoaded', function() {
+      renderNavbarMenu();
+      renderNavbarRight();
+      renderSidebarMenu();
+      renderUserInfo();
+      renderProfileMenu();
+    });
+  </script>
+
+</body>
+</html>

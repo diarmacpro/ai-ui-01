@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Layout Admin</title>
+  <style>
+/* Reset dasar */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8fafc;
+  color: #334155;
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 64px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 1000;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.navbar-left,
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  text-decoration: none;
+  letter-spacing: -0.025em;
+}
+
+.toggle-sidebar {
+  font-size: 1.25rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+  color: #64748b;
+}
+
+.toggle-sidebar:hover {
+  background-color: #f1f5f9;
+}
+
+.main-menu {
+  display: flex;
+  gap: 24px;
+}
+
+.main-menu a {
+  text-decoration: none;
+  color: #475569;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.main-menu a:hover {
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+
+.navbar-right .dropdown {
+  position: relative;
+  cursor: pointer;
+}
+
+.navbar-right .dropdown span {
+  font-size: 1.25rem;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  display: block;
+}
+
+.navbar-right .dropdown:hover span {
+  background-color: #f1f5f9;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  min-width: 200px;
+  padding: 8px 0;
+  margin-top: 8px;
+  z-index: 1001;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-menu li {
+  list-style: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-menu li:hover {
+  background-color: #f8fafc;
+}
+
+/* Container Layout */
+.container {
+  display: flex;
+  margin-top: 64px;
+  height: calc(100vh - 64px);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background-color: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  position: relative;
+  overflow-y: auto;
+  transition: transform 0.3s ease, width 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar.collapsed {
+  transform: translateX(-100%);
+  width: 0;
+}
+
+.menu {
+  padding: 24px 0;
+  flex: 1;
+}
+
+.menu li {
+  margin-bottom: 4px;
+  list-style: none;
+}
+
+.menu > li > a {
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  text-decoration: none;
+  color: #475569;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-right: 3px solid transparent;
+}
+
+.menu > li > a:hover,
+.menu > li > a.active {
+  background-color: #f8fafc;
+  color: #1e293b;
+  border-right-color: #3b82f6;
+}
+
+.submenu-parent {
+  position: relative;
+}
+
+.submenu-parent > a::after {
+  content: '▼';
+  margin-left: auto;
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+  color: #94a3b8;
+}
+
+.submenu-parent.open > a::after {
+  transform: rotate(180deg);
+}
+
+.submenu {
+  display: none;
+  background-color: #f8fafc;
+  border-left: 2px solid #e2e8f0;
+  margin-left: 24px;
+}
+
+.submenu.show {
+  display: block;
+}
+
+.submenu li a {
+  display: block;
+  padding: 10px 24px;
+  text-decoration: none;
+  color: #64748b;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.submenu li a:hover {
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+
+/* Footer Sidebar */
+.sidebar-footer {
+  border-top: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+  padding: 16px 24px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.user-info:hover {
+  background-color: #f1f5f9;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  background-color: #3b82f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.dropdown-toggle {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: transform 0.2s ease;
+}
+
+.user-info.open .dropdown-toggle {
+  transform: rotate(180deg);
+}
+
+.profile-dropdown {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  margin-bottom: 8px;
+  padding: 8px 0;
+  z-index: 1001;
+}
+
+.profile-dropdown.show {
+  display: block;
+}
+
+.profile-dropdown li {
+  list-style: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.profile-dropdown li:hover {
+  background-color: #f8fafc;
+}
+
+.profile-dropdown a {
+  text-decoration: none;
+  color: #475569;
+}
+
+/* Main Content */
+.content {
+  flex: 1;
+  padding: 32px;
+  overflow-y: auto;
+  background-color: #f8fafc;
+}
+
+.content h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.content p {
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* Card Component */
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  border: 1px solid #e2e8f0;
+  margin-top: 24px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar-left .main-menu {
+    display: none;
+  }
+  
+  .navbar {
+    padding: 0 16px;
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    height: calc(100vh - 64px);
+    z-index: 999;
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.show {
+    transform: translateX(0);
+  }
+  
+  .content {
+    padding: 20px;
+    width: 100%;
+  }
+  
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 64px);
+    background-color: rgba(0,0,0,0.5);
+    z-index: 998;
+  }
+  
+  .overlay.show {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand {
+    font-size: 1.25rem;
+  }
+  
+  .content {
+    padding: 16px;
+  }
+  
+  .content h1 {
+    font-size: 1.5rem;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
+      <a href="./" class="brand">AdminPanel</a>
+      <div class="main-menu">
+        <a href="#" onclick="setActiveMenu(this)">Dashboard</a>
+        <a href="#" onclick="setActiveMenu(this)">Analitik</a>
+        <a href="#" onclick="setActiveMenu(this)">Laporan</a>
+      </div>
+    </div>
+    <div class="navbar-right">
+      <div class="dropdown notif" onclick="toggleDropdown(this)">
+        <span>🔔</span>
+        <ul class="dropdown-menu">
+          <li>Notifikasi baru (5)</li>
+          <li>Pesanan masuk</li>
+          <li>Update sistem</li>
+          <li>Lihat semua</li>
+        </ul>
+      </div>
+      <div class="dropdown message" onclick="toggleDropdown(this)">
+        <span>📩</span>
+        <ul class="dropdown-menu">
+          <li>Pesan baru (3)</li>
+          <li>Chat dengan admin</li>
+          <li>Kotak masuk</li>
+          <li>Lihat semua</li>
+        </ul>
+      </div>
+      <div class="dropdown user" onclick="toggleDropdown(this)">
+        <span>👤</span>
+        <ul class="dropdown-menu">
+          <li>Profil Saya</li>
+          <li>Pengaturan</li>
+          <li>Bantuan</li>
+          <li>Keluar</li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Overlay untuk mobile -->
+  <div class="overlay" onclick="closeSidebar()"></div>
+
+  <!-- Sidebar & Konten -->
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <ul class="menu">
+        <li><a href="#" onclick="setActiveMenu(this)" class="active">📊 Dashboard</a></li>
+        <li><a href="#" onclick="setActiveMenu(this)">👥 Pengguna</a></li>
+        <li class="submenu-parent">
+          <a href="#" onclick="toggleSubmenu(this)">📦 Produk</a>
+          <ul class="submenu">
+            <li><a href="#" onclick="setActiveMenu(this)">Daftar Produk</a></li>
+            <li><a href="#" onclick="setActiveMenu(this)">Tambah Produk</a></li>
+            <li><a href="#" onclick="setActiveMenu(this)">Kategori</a></li>
+          </ul>
+        </li>
+        <li><a href="#" onclick="setActiveMenu(this)">🛒 Pesanan</a></li>
+        <li class="submenu-parent">
+          <a href="#" onclick="toggleSubmenu(this)">📈 Laporan</a>
+          <ul class="submenu">
+            <li><a href="#" onclick="setActiveMenu(this)">Penjualan</a></li>
+            <li><a href="#" onclick="setActiveMenu(this)">Keuangan</a></li>
+          </ul>
+        </li>
+        <li><a href="#" onclick="setActiveMenu(this)">⚙️ Pengaturan</a></li>
+        <li><a href="#" onclick="setActiveMenu(this)">❓ Bantuan</a></li>
+      </ul>
+      <footer class="sidebar-footer">
+        <div class="user-info" onclick="toggleUserDropdown()">
+          <div class="user-avatar">JD</div>
+          <div>
+            <div class="user-name">John Doe</div>
+            <div style="font-size: 0.8rem; color: #64748b;">Administrator</div>
+          </div>
+          <button class="dropdown-toggle">▼</button>
+        </div>
+        <ul class="profile-dropdown" id="profileDropdown">
+          <li><a href="#">👤 Profil Saya</a></li>
+          <li><a href="#">⚙️ Pengaturan</a></li>
+          <li><a href="#">❓ Bantuan</a></li>
+          <li><a href="#">🚪 Keluar</a></li>
+        </ul>
+      </footer>
+    </aside>
+
+    <!-- Konten Utama -->
+    <main class="content">
+      <h1>Dashboard</h1>
+      <p>Selamat datang di panel administrasi. Sidebar akan menyembunyikan/menampilkan dengan tombol toggle, dan responsif untuk perangkat mobile.</p>
+      
+      <div class="card">
+        <h2 style="margin-bottom: 16px; color: #1e293b;">Statistik Singkat</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+          <div style="padding: 16px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #3b82f6;">
+            <h3 style="color: #1e40af; margin-bottom: 8px;">Total Pengguna</h3>
+            <p style="font-size: 1.5rem; font-weight: 600; color: #1e293b;">1,234</p>
+          </div>
+          <div style="padding: 16px; background: #f0fdf4; border-radius: 8px; border-left: 4px solid #10b981;">
+            <h3 style="color: #059669; margin-bottom: 8px;">Penjualan Hari Ini</h3>
+            <p style="font-size: 1.5rem; font-weight: 600; color: #1e293b;">Rp 2,450,000</p>
+          </div>
+          <div style="padding: 16px; background: #fef3f2; border-radius: 8px; border-left: 4px solid #f97316;">
+            <h3 style="color: #ea580c; margin-bottom: 8px;">Pesanan Baru</h3>
+            <p style="font-size: 1.5rem; font-weight: 600; color: #1e293b;">23</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Toggle Sidebar untuk desktop dan mobile
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.overlay');
+      
+      if (window.innerWidth <= 768) {
+        sidebar.classList.toggle('show');
+        overlay.classList.toggle('show');
+      } else {
+        sidebar.classList.toggle('collapsed');
+      }
+    }
+
+    // Tutup sidebar untuk mobile
+    function closeSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.overlay');
+      
+      sidebar.classList.remove('show');
+      overlay.classList.remove('show');
+    }
+
+    // Toggle submenu
+    function toggleSubmenu(element) {
+      const parent = element.parentElement;
+      const submenu = parent.querySelector('.submenu');
+      
+      parent.classList.toggle('open');
+      submenu.classList.toggle('show');
+    }
+
+    // Set active menu
+    function setActiveMenu(element) {
+      // Hapus active dari semua menu
+      document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
+      // Tambah active ke menu yang diklik
+      element.classList.add('active');
+      
+      // Update konten utama
+      const content = document.querySelector('.content');
+      const menuText = element.textContent.replace(/[📊👥📦🛒📈⚙️❓]/g, '').trim();
+      content.querySelector('h1').textContent = menuText;
+      content.querySelector('p').textContent = `Anda sedang berada di halaman ${menuText}.`;
+      
+      // Tutup sidebar di mobile setelah memilih menu
+      if (window.innerWidth <= 768) {
+        closeSidebar();
+      }
+    }
+
+    // Toggle dropdown di navbar
+    function toggleDropdown(element) {
+      const dropdown = element.querySelector('.dropdown-menu');
+      const allDropdowns = document.querySelectorAll('.navbar-right .dropdown-menu');
+      
+      // Tutup semua dropdown lain
+      allDropdowns.forEach(d => {
+        if (d !== dropdown) {
+          d.classList.remove('show');
+        }
+      });
+      
+      dropdown.classList.toggle('show');
+    }
+
+    // Toggle user dropdown
+    function toggleUserDropdown() {
+      const userInfo = document.querySelector('.user-info');
+      const dropdown = document.getElementById('profileDropdown');
+      
+      userInfo.classList.toggle('open');
+      dropdown.classList.toggle('show');
+    }
+
+    // Tutup dropdown saat klik di luar
+    document.addEventListener('click', function(event) {
+      const dropdowns = document.querySelectorAll('.dropdown-menu, .profile-dropdown');
+      const isClickInside = event.target.closest('.dropdown, .user-info');
+      
+      if (!isClickInside) {
+        dropdowns.forEach(dropdown => {
+          dropdown.classList.remove('show');
+        });
+        document.querySelector('.user-info').classList.remove('open');
+      }
+    });
+
+    // Handle resize window
+    window.addEventListener('resize', function() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.overlay');
+      
+      if (window.innerWidth > 768) {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+      }
+    });
+  </script>
+
+</body>
+</html>
